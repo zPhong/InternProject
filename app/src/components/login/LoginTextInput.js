@@ -7,8 +7,7 @@ import {
   Text
 } from "react-native";
 import PropTypes from "prop-types";
-import LoginScreen from "../../screen/login/LoginScreen";
-import { observer } from "mobx-react/native";
+import { observer, inject } from "mobx-react/native";
 
 const propTypes = {
   placehoder: PropTypes.string,
@@ -26,6 +25,7 @@ const defaultProps = {
   onChangeText: null
 };
 
+@inject("loginStore")
 @observer
 export default class LoginTextInput extends Component {
   constructor(props) {
@@ -41,12 +41,12 @@ export default class LoginTextInput extends Component {
 
   onFocus = () => {
     this.setState({ isFocused: true });
-    LoginScreen.onFocus();
+    this.props.loginStore.onFocus();
   };
 
   onBlur = () => {
     this.setState({ isFocused: false });
-    LoginScreen.onBlur();
+    this.props.loginStore.onBlur();
   };
 
   onChangeText(value) {
