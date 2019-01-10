@@ -1,50 +1,92 @@
 import React, { Component } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  TextInput,
-  StyleSheet
-} from "react-native";
-import { action } from "mobx";
+import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
+import { observer, inject } from "mobx-react";
 
 import LoginTextInput from "../../components/login/LoginTextInput";
 
+@inject("loginStore", "orientationListener")
+@observer
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
       password: "",
-      isEnableLogin: false,
-      isFocused: true
+      isEnableLogin: false
     };
+  }
 
-    this.onFocus = this.onFocus.bind(this);
-    this.onBlur = this.onBlur.bind(this);
+  renderTopContent() {
+    const { loginStore, orientationListener } = this.props;
+    if (loginStore.isFocused || orientationListener.isOrientation) {
+      return (
+        <View style={[loginScreenStyle.topContent, { height: "30%" }]}>
+          <Image
+            source={require("../../../assets/images/fb_logo.png")}
+            style={{ height: "50%", aspectRatio: 1 }}
+          />
+        </View>
+      );
+    }
+    console.log("A", orientationListener.isOrientation.toString());
+    return (
+      <View style={loginScreenStyle.topContent}>
+        <Image
+          source={require("../../../assets/images/topContentBg.jpg")}
+          style={loginScreenStyle.topContentImage}
+        />
+        <View style={loginScreenStyle.topContentLanguage}>
+          <Text style={loginScreenStyle.topContentLanguageText}>
+            {orientationListener.isOrientation.toString()}
+          </Text>
+        </View>
+      </View>
+    );
   }
-  @action onFocus() {
-    this.setState({ isFocused: true });
-  }
-  @action onBlur() {
-    this.setState({ isFocused: false });
+
+  renderBottomContent() {
+    const { loginStore, orientationListener } = this.props;
+
+    if (loginStore.isFocused)
+      return (
+        <View style={[loginScreenStyle.bottomContent, { height: "20%" }]}>
+          <TouchableOpacity>
+            <Text
+              style={{ fontSize: 15, fontWeight: "bold", color: "#0D47A1" }}
+            >
+              TẠO TÀI KHOẢN FACEBOOK MỚI
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    return (
+      <View style={loginScreenStyle.bottomContent}>
+        <TouchableOpacity>
+          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#0D47A1" }}>
+            QUÊN MẬT KHẨU?
+          </Text>
+        </TouchableOpacity>
+        {!orientationListener.isOrientation ? (
+          <View style={loginScreenStyle.lineSeperate}>
+            <View style={loginScreenStyle.line} />
+            <Text style={{ fontSize: 14, marginHorizontal: 3 }}>HOẶC</Text>
+            <View style={loginScreenStyle.line} />
+          </View>
+        ) : null}
+        <TouchableOpacity style={loginScreenStyle.createBtn}>
+          <Text style={loginScreenStyle.createBtnText}>
+            TẠO TÀI KHOẢN FACEBOOK MỚI
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   render() {
+    const { orientationListener } = this.props;
     return (
       <View style={loginScreenStyle.container}>
-        <View style={loginScreenStyle.topContent}>
-          <Image
-            source={require("../../../assets/images/topContentBg.jpg")}
-            style={loginScreenStyle.topContentImage}
-          />
-          <View style={loginScreenStyle.topContentLanguage}>
-            <Text style={loginScreenStyle.topContentLanguageText}>
-              {this.state.isFocused.toString()}
-            </Text>
-          </View>
-        </View>
+        {this.renderTopContent()}
         <View style={loginScreenStyle.midContent}>
           <LoginTextInput
             placeholder={"Điện thoại hoặc Email"}
@@ -80,25 +122,7 @@ export default class LoginScreen extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={loginScreenStyle.bottomContent}>
-          <TouchableOpacity>
-            <Text
-              style={{ fontSize: 18, fontWeight: "bold", color: "#0D47A1" }}
-            >
-              QUÊN MẬT KHẨU?
-            </Text>
-          </TouchableOpacity>
-          <View style={loginScreenStyle.lineSeperate}>
-            <View style={loginScreenStyle.line} />
-            <Text style={{ fontSize: 14, marginHorizontal: 3 }}>HOẶC</Text>
-            <View style={loginScreenStyle.line} />
-          </View>
-          <TouchableOpacity style={loginScreenStyle.createBtn}>
-            <Text style={loginScreenStyle.createBtnText}>
-              TẠO TÀI KHOẢN FACEBOOK MỚI
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {this.renderBottomContent()}
       </View>
     );
   }
@@ -131,8 +155,9 @@ const loginScreenStyle = StyleSheet.create({
   },
   midContent: {
     width: "100%",
+    flex: 1,
     paddingHorizontal: "10%",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center"
   },
   loginBtn: {
@@ -147,7 +172,8 @@ const loginScreenStyle = StyleSheet.create({
     fontSize: 18
   },
   bottomContent: {
-    flex: 1,
+    width: "100%",
+    height: "30%",
     paddingHorizontal: "10%",
     justifyContent: "space-evenly",
     alignItems: "center",
