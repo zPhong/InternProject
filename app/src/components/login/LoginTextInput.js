@@ -4,7 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text
+  Text,
+  Keyboard
 } from "react-native";
 import PropTypes from "prop-types";
 import { observer, inject } from "mobx-react/native";
@@ -37,17 +38,34 @@ export default class LoginTextInput extends Component {
 
     this.onChangeText = this.onChangeText.bind(this);
     this.renderBtn = this.renderBtn.bind(this);
+    this.keyboardDidShow = this.keyboardDidShow.bind(this);
+    this.keyboardDidHide = this.keyboardDidHide.bind(this);
+  }
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      this.keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      this.keyboardDidHide
+    );
   }
 
-  onFocus = () => {
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  keyboardDidShow() {
     this.setState({ isFocused: true });
     this.props.loginStore.onFocus();
-  };
+  }
 
-  onBlur = () => {
+  keyboardDidHide() {
     this.setState({ isFocused: false });
     this.props.loginStore.onBlur();
-  };
+  }
 
   onChangeText(value) {
     if (this.props.onChangeText != null) this.props.onChangeText(value);
@@ -88,8 +106,6 @@ export default class LoginTextInput extends Component {
         ]}
       >
         <TextInput
-          onFocus={this.onFocus}
-          onBlur={this.onBlur}
           value={value}
           onChangeText={this.onChangeText}
           secureTextEntry={!this.state.isShowPassword}

@@ -1,7 +1,21 @@
 import React, { Component } from "react";
+import LoginScreen from "./src/screen/login/LoginScreen";
+import HomeScreen from "./src/screen/HomeScreen";
+import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import stores from "./src/stores";
 import { Provider } from "mobx-react";
-import Root from "./src/screen/RootStack";
+
+const RootStack = createAppContainer(
+  createSwitchNavigator(
+    {
+      Login: LoginScreen,
+      Home: HomeScreen
+    },
+    {
+      initialRouteName: "Login"
+    }
+  )
+);
 
 export default class App extends Component {
   constructor(props) {
@@ -11,7 +25,7 @@ export default class App extends Component {
   render() {
     return (
       <Provider {...stores}>
-        <Root />
+        <RootStack />
       </Provider>
     );
   }

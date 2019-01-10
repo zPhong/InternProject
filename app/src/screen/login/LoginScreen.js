@@ -1,10 +1,17 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  StyleSheet,
+  Dimensions
+} from "react-native";
 import { observer, inject } from "mobx-react";
 
 import LoginTextInput from "../../components/login/LoginTextInput";
 
-@inject("loginStore", "orientationListener")
+@inject("loginStore")
 @observer
 export default class LoginScreen extends Component {
   constructor(props) {
@@ -12,13 +19,22 @@ export default class LoginScreen extends Component {
     this.state = {
       username: "",
       password: "",
-      isEnableLogin: false
+      isEnableLogin: false,
+      isOrientation: false
     };
+
+    this.onLayout = this.onLayout.bind(this);
+  }
+
+  onLayout(e) {
+    if (Dimensions.get("window").width > Dimensions.get("window").height)
+      this.setState({ isOrientation: true });
+    else this.setState({ isOrientation: false });
   }
 
   renderTopContent() {
-    const { loginStore, orientationListener } = this.props;
-    if (loginStore.isFocused || orientationListener.isOrientation) {
+    const { loginStore } = this.props;
+    if (loginStore.isFocused || this.state.isOrientation) {
       return (
         <View style={[loginScreenStyle.topContent, { height: "30%" }]}>
           <Image
@@ -28,7 +44,6 @@ export default class LoginScreen extends Component {
         </View>
       );
     }
-    console.log("A", orientationListener.isOrientation.toString());
     return (
       <View style={loginScreenStyle.topContent}>
         <Image
@@ -36,16 +51,14 @@ export default class LoginScreen extends Component {
           style={loginScreenStyle.topContentImage}
         />
         <View style={loginScreenStyle.topContentLanguage}>
-          <Text style={loginScreenStyle.topContentLanguageText}>
-            {orientationListener.isOrientation.toString()}
-          </Text>
+          <Text style={loginScreenStyle.topContentLanguageText}>English</Text>
         </View>
       </View>
     );
   }
 
   renderBottomContent() {
-    const { loginStore, orientationListener } = this.props;
+    const { loginStore } = this.props;
 
     if (loginStore.isFocused)
       return (
@@ -66,7 +79,7 @@ export default class LoginScreen extends Component {
             QUÊN MẬT KHẨU?
           </Text>
         </TouchableOpacity>
-        {!orientationListener.isOrientation ? (
+        {!this.state.isOrientation ? (
           <View style={loginScreenStyle.lineSeperate}>
             <View style={loginScreenStyle.line} />
             <Text style={{ fontSize: 14, marginHorizontal: 3 }}>HOẶC</Text>
@@ -83,9 +96,8 @@ export default class LoginScreen extends Component {
   }
 
   render() {
-    const { orientationListener } = this.props;
     return (
-      <View style={loginScreenStyle.container}>
+      <View style={loginScreenStyle.container} onLayout={this.onLayout}>
         {this.renderTopContent()}
         <View style={loginScreenStyle.midContent}>
           <LoginTextInput
