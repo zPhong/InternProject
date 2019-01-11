@@ -1,36 +1,241 @@
-import React, { Component } from "react";
-import { createMaterialTopTabNavigator } from "react-navigation";
+import React, {Component} from "react";
+import {createAppContainer, createMaterialTopTabNavigator} from "react-navigation";
 
 import NewFeedScreen from "./newfeed/NewFeedScreen";
-import ProfileScreen from "./profile/ProfileScreen";
+import ProfileScreen from "./watch/WatchScreen";
+import {
+    TextInput, View, StyleSheet, Text, TouchableOpacity, ScrollView, PanResponder, Animated,
+    Image
+} from "react-native";
+import Entypo from "react-native-vector-icons/Entypo";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
+import GroupScreen from "./group/GroupScreen";
+import NotificationScreen from "./notification/NotificationScreen";
+import SettingScreen from "./setting/SettingScreen";
+/* global require */
 
-const topNavigation = createMaterialTopTabNavigator(
-  {
-    NewFeed: NewFeedScreen,
-    Profile: ProfileScreen
-  },
-  {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        const { routeName } = navigation.state;
-        let IconComponent = Ionicons;
-        let iconName;
-        if (routeName === "Home") {
-          iconName = `ios-information-circle${focused ? "" : "-outline"}`;
-          // Sometimes we want to add badges to some icons.
-          // You can check the implementation below.
-          IconComponent = HomeIconWithBadge;
-        } else if (routeName === "Settings") {
-          iconName = `ios-options${focused ? "" : "-outline"}`;
+const headerHeight = 40;
+const tabNavigationHeight = 40;
+
+const globalStyle = {
+    header: StyleSheet.create(
+        {
+            container:
+                {
+                    width: '100%',
+                    height: headerHeight,
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: '#4267A8',
+                    flexDirection: 'row',
+                },
+            icon: {
+                fontSize: 25,
+                color: 'white',
+                marginHorizontal: '3%',
+            },
+            searchFieldContainer: {
+                flex: 1,
+                alignItems: 'center',
+                flexDirection: 'row',
+                borderColor: '#BDBDBD',
+                borderBottomWidth: 1,
+                paddingBottom: 3,
+            },
+            searchFieldIcon:
+                {
+                    fontSize: 25,
+                    color: 'white',
+                },
+            searchFieldContent:
+                {
+                    marginLeft: 2,
+                    fontSize: 15,
+                    color: '#BDBDBD'
+                }
         }
-
-        // You can return any component that you like here!
-        return <IconComponent name={iconName} size={25} color={tintColor} />;
-      }
+    ),
+    tabNav: StyleSheet.create({
+        tabIcon: {
+            height: tabNavigationHeight -10,
+            aspectRatio: 1,
+        },
+        tabContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 1,
+            marginBottom : 5,
+        },
+        container: {
+            backgroundColor: 'white',
+            width: '100%',
+            height: tabNavigationHeight,
+            justifyContent : 'center',
+        }
     }),
-    tabBarOptions: {
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray"
+};
+
+const TopNavigation = createAppContainer(createMaterialTopTabNavigator(
+    {
+        NewFeed:
+            {
+                screen: NewFeedScreen,
+                navigationOptions: {
+                    tabBarLabel: 'NewFeed',
+                    tabBarIcon: ({focused}) => {
+                        const image = focused
+                            ? require('../../assets/icons/newfeed_active.jpg')
+                            : require('../../assets/icons/newfeed.jpg');
+                        return (
+                            <Image
+                                source={image}
+                                style={globalStyle.tabNav.tabIcon}
+                            />
+                        )
+                    }
+                }
+            },
+        Group:
+            {
+                screen: GroupScreen,
+                navigationOptions: {
+                    tabBarLabel: 'Group',
+                    tabBarIcon: ({focused}) => {
+                        const image = focused
+                            ? require('../../assets/icons/group_active.jpg')
+                            : require('../../assets/icons/group.jpg');
+                        return (
+                            <Image
+                                source={image}
+                                style={globalStyle.tabNav.tabIcon}
+                            />
+                        )
+                    }
+                }
+            },
+        Watch:
+            {
+                screen: ProfileScreen,
+                navigationOptions: {
+                    tabBarLabel: 'Watch',
+                    tabBarIcon: ({focused}) => {
+                        const image = focused
+                            ? require('../../assets/icons/watch_active.jpg')
+                            : require('../../assets/icons/watch.jpg');
+                        return (
+                            <Image
+                                source={image}
+                                style={globalStyle.tabNav.tabIcon}
+                            />
+                        )
+                    }
+                }
+            },
+        Notification:
+            {
+                screen: NotificationScreen,
+                navigationOptions: {
+                    tabBarLabel: 'Notification',
+                    tabBarIcon: ({focused}) => {
+                        const image = focused
+                            ? require('../../assets/icons/noti_active.jpg')
+                            : require('../../assets/icons/noti.jpg');
+                        return (
+                            <Image
+                                source={image}
+                                style={globalStyle.tabNav.tabIcon}
+                            />
+                        )
+                    }
+                }
+            },
+        Setting:
+            {
+                screen: SettingScreen,
+                navigationOptions: {
+                    tabBarLabel: 'Setting',
+                    tabBarIcon: ({focused}) => {
+                        const image = focused
+                            ? require('../../assets/icons/setting_active.jpg')
+                            : require('../../assets/icons/setting.jpg');
+                        return (
+                            <Image
+                                source={image}
+                                style={globalStyle.tabNav.tabIcon}
+                            />
+                        )
+                    }
+                }
+            },
+    },
+    {
+        tabBarOptions: {
+            tabStyle: StyleSheet.flatten(globalStyle.tabNav.tabContainer),
+            style: StyleSheet.flatten(globalStyle.tabNav.container),
+            indicatorStyle:{ backgroundColor : 'transparent'},
+            iconStyle : {alignSelf: 'center'},
+            showIcon: true,
+            showLabel: false,
+        }
     }
-  }
-);
+    ))
+;
+
+export default class HomeScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.animatedValue = new Animated.Value(0);
+        this._headerController = PanResponder.create({
+            // Ask to be the responder:
+            onStartShouldSetPanResponder: (evt, gestureState) => true,
+            onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
+            onMoveShouldSetPanResponder: (evt, gestureState) => true,
+            onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+                return gestureState.dx != 0 && gestureState.dy != 0;},
+            onPanResponderGrant: () => this.setState({scroll: false}),
+            onPanResponderMove: this.AnimatedHeader,
+            onPanResponderRelease: () => this.setState({scroll: true})
+        });
+
+    }
+
+
+    AnimatedHeader = (event, gestureState) => {
+        let calculatedPos = gestureState.dy;
+        if (calculatedPos < -headerHeight)
+            calculatedPos = -headerHeight;
+        if (calculatedPos > 0)
+            calculatedPos = 0;
+
+        //this.setState({headerPos : calculatedPos});
+        this.animatedValue.setValue(Math.abs(calculatedPos / headerHeight));
+
+    };
+
+    render() {
+        const {header} = globalStyle;
+        const headerPos = this.animatedValue.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, -headerHeight],
+            }
+        );
+        return (
+            <View style={{flex: 1,}} {...this._headerController.panHandlers}>
+                <Animated.View style={[header.container, {marginTop: headerPos}]}>
+                    <Entypo name={'camera'} style={header.icon}/>
+                    <TouchableOpacity style={header.searchFieldContainer}>
+                        <EvilIcons name={'search'} style={header.searchFieldIcon}/>
+                        <Text style={header.searchFieldContent}>
+                            Tìm kiếm
+                        </Text>
+                    </TouchableOpacity>
+                    <FontAwesome5 name={'facebook-messenger'} style={header.icon}/>
+                </Animated.View>
+                <TopNavigation/>
+            </View>
+        );
+    }
+}
+
+
