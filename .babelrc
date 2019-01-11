@@ -1,7 +1,6 @@
 {
   "presets": [
     "module:metro-react-native-babel-preset",
-    ["@babel/preset-env", { "modules": false }],
     "@babel/preset-flow"
   ],
   "plugins": [

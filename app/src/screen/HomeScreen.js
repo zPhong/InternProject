@@ -3,8 +3,9 @@ import { createMaterialTopTabNavigator } from "react-navigation";
 
 import NewFeedScreen from "./newfeed/NewFeedScreen";
 import ProfileScreen from "./profile/ProfileScreen";
+import {View} from "react-native";
 
-const topNavigation = createMaterialTopTabNavigator(
+const TopNavigation = createMaterialTopTabNavigator(
   {
     NewFeed: NewFeedScreen,
     Profile: ProfileScreen
@@ -34,3 +35,18 @@ const topNavigation = createMaterialTopTabNavigator(
     }
   }
 );
+
+export default class HomeScreen extends Component{
+  constructor(props)
+  {
+    super(props);
+  }
+
+  render(){
+    return(
+        <View style={{flex : 1,}}>
+          <TopNavigation/>
+        </View>
+    );
+  }
+}
