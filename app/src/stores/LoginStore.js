@@ -1,6 +1,6 @@
 import { observable, action } from "mobx";
-
-export default class LoginStore {
+type Props = {};
+export default class LoginStore<Props> {
   constructor() {}
 
   @observable isFocused = false;

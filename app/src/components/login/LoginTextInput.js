@@ -31,17 +31,24 @@ const defaultProps = {
 export default class LoginTextInput extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isFocused: false,
-      isShowPassword: this.props.secureTextEntry ? false : true
-    };
 
     this.onChangeText = this.onChangeText.bind(this);
     this.renderBtn = this.renderBtn.bind(this);
     this.keyboardDidShow = this.keyboardDidShow.bind(this);
     this.keyboardDidHide = this.keyboardDidHide.bind(this);
   }
-  componentDidMount() {
+
+  state = {
+    isFocused: false,
+    isShowPassword: this.props.secureTextEntry ? false : true
+  };
+
+  onChangeText: Function;
+  renderBtn: Function;
+  keyboardDidHide: Function;
+  keyboardDidShow: Function;
+
+  componentWillMount() {
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this.keyboardDidShow
