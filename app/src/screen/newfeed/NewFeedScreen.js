@@ -18,24 +18,26 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 /* global require */
-
+import { observer, inject, toJS } from "mobx-react";
+import TimeLineModal from "../../components/newfeed/TimeLineModal";
+import { timelineData } from "../../data";
 type Props = {};
 type State = {
-  modalVisible: boolean,
-  isShouldVisibleModal: boolean,
   user: {
     avatar: string
   },
+  timelineStore: any,
   news: Array<{}>
 };
-export default class NewFeedScreen extends Component<Props, State> {
+
+@inject("timelineStore")
+@observer
+export default class NewFeedScreen extends Component<Props> {
   constructor(props) {
     super(props);
   }
 
   state = {
-    modalVisible: false,
-    isShouldVisibleModal: false,
     user: {
       avatar:
         "https://scontent.fsgn2-4.fna.fbcdn.net/v/t1.0-9/34962526_1670201939745666_935045514557128704_n.jpg?_nc_cat=109&_nc_ht=scontent.fsgn2-4.fna&oh=922c5e4c7b25b9184d56d6dcf7b7436b&oe=5CB5D7B4"
@@ -45,13 +47,15 @@ export default class NewFeedScreen extends Component<Props, State> {
   componentWillMount() {}
 
   renderNewsItem(news: object, index: number) {
+    const { timelineStore } = this.props;
     return (
       <TouchableHighlight
         key={index}
         underlayColor={"rgba(0,0,0 ,0.2)"}
         style={NewsTimeLineStyle.newsContainer}
         onPress={() => {
-          this.setState({ modalVisible: true });
+          timelineStore.index = index;
+          timelineStore.showModal();
         }}
       >
         <ImageBackground
@@ -84,7 +88,7 @@ export default class NewFeedScreen extends Component<Props, State> {
 
   render() {
     const { navigate } = this.props.navigation;
-
+    const { timelineStore } = this.props;
     return (
       <ScrollView style={{ flex: 1, backgroundColor: "#CDCDCD" }}>
         <View style={{ backgroundColor: "white" }}>
@@ -128,11 +132,13 @@ export default class NewFeedScreen extends Component<Props, State> {
               padding: 5
             }}
           >
-            {this.state.news.map((news, index) =>
-              this.renderNewsItem(news, index)
-            )}
+            {timelineData.map((news, index) => {
+              return this.renderNewsItem(news, index);
+            })}
           </View>
         </ScrollView>
+
+        <TimeLineModal />
       </ScrollView>
     );
   }

@@ -15,7 +15,8 @@ import {
   ScrollView,
   PanResponder,
   Animated,
-  Image
+  Image,
+  Modal
 } from "react-native";
 import Entypo from "react-native-vector-icons/Entypo";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -23,6 +24,8 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 import GroupScreen from "./group/GroupScreen";
 import NotificationScreen from "./notification/NotificationScreen";
 import SettingScreen from "./setting/SettingScreen";
+import SlidingMenu from "../components/slidingmenu/SlidingMenu";
+
 /* global require */
 
 const headerHeight = 40;
@@ -159,8 +162,9 @@ const TopNavigation = createAppContainer(
 );
 
 type Props = {};
+
 export default class HomeScreen extends Component<Props> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
   }
   animatedValue: Animated.Value;
@@ -175,14 +179,17 @@ export default class HomeScreen extends Component<Props> {
       onPanResponderGrant: () => true,
       onPanResponderMove: this.AnimatedHeader,
       onPanResponderRelease: () => true,
-      onPanResponderTerminationRequest: (e, gestureState) => true,
-      onPanResponderTerminate: (e, gestureState) => {
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+      onPanResponderTerminate: (evt, gestureState) => {
         console.log("AAAA");
       }
     });
   }
 
-  AnimatedHeader = (event, gestureState) => {
+  AnimatedHeader = (
+    event: GestureResponderEvent,
+    gestureState: PanResponderGestureState
+  ) => {
     let calculatedPos = gestureState.dy;
     if (calculatedPos < -headerHeight) calculatedPos = -headerHeight;
     if (calculatedPos > 0) calculatedPos = 0;
@@ -208,6 +215,7 @@ export default class HomeScreen extends Component<Props> {
           <FontAwesome5 name={"facebook-messenger"} style={header.icon} />
         </Animated.View>
         <TopNavigation />
+        <SlidingMenu />
       </View>
     );
   }
