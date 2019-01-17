@@ -77,7 +77,7 @@ export default class TimeLineModal extends React.Component<Props> {
   render() {
     const { timelineStore } = this.props;
 
-    var backdrop = this.translateY.interpolate({
+    let backdrop = this.translateY.interpolate({
       inputRange: [0, Dimensions.get("window").height / 2],
       outputRange: ["rgba(0,0,0,1)", "rgba(0,0,0,0)"]
     });

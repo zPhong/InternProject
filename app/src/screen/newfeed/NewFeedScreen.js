@@ -54,8 +54,8 @@ export default class NewFeedScreen extends Component<Props> {
         underlayColor={"rgba(0,0,0 ,0.2)"}
         style={NewsTimeLineStyle.newsContainer}
         onPress={() => {
-          timelineStore.showModal();
           timelineStore.index = index;
+          timelineStore.showModal();
         }}
       >
         <ImageBackground
