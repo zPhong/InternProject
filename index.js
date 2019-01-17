@@ -1,5 +1,5 @@
 /** @format */
-import '@babel/polyfill'
+import "@babel/polyfill";
 
 import { AppRegistry } from "react-native";
 

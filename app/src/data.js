@@ -37,4 +37,13 @@ const timelineData = [
   }
 ];
 
-export { timelineData };
+const emojiImage = [
+  require("../assets/icons/like.png"),
+  require("../assets/icons/love.png"),
+  require("../assets/icons/haha.png"),
+  require("../assets/icons/wow.png"),
+  require("../assets/icons/sad.png"),
+  require("../assets/icons/angry.png")
+];
+
+export { timelineData, emojiImage };

@@ -1,5 +1,5 @@
 {
-  "extends": ["react-app", "plugin:prettier/recommended"],
+  "extends": ["react-app", "plugin:prettier/recommended", "eslint"],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
