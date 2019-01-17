@@ -1,16 +1,22 @@
 import React from "react";
 import { Modal, PanResponder, Animated, Dimensions, Text } from "react-native";
 import { inject, observer } from "mobx-react";
+import MenuItem from "./MenuItem";
+import {timelineData} from "../../data";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 type State = {
   isShouldVisibleModal: boolean,
   contentHeight: number
 };
 type Props = {
-  slidingmenuStore: any
+  slidingmenuStore: any,
+  timelineStore: any,
 };
 
-@inject("slidingmenuStore")
+@inject("timelineStore","slidingmenuStore")
 @observer
 export default class SlidingMenu extends React.Component<Props> {
   constructor(props: any) {
@@ -32,7 +38,7 @@ export default class SlidingMenu extends React.Component<Props> {
           }
 
           console.log(this.state.contentHeight);
-          if (gestureState.dy > this.state.contentHeight * 0.2)
+          if (gestureState.dy > this.state.contentHeight * 0.4)
             this.setState({ isShouldVisibleModal: true });
           else {
             this.setState({ isShouldVisibleModal: false });
@@ -68,7 +74,7 @@ export default class SlidingMenu extends React.Component<Props> {
     const { slidingmenuStore } = this.props;
     var backdrop = this.translateY.interpolate({
       inputRange: [0, Dimensions.get("window").height / 2],
-      outputRange: ["rgba(0,0,0,1)", "rgba(0,0,0,0)"]
+      outputRange: ["rgba(0,0,0,0.5)", "rgba(0,0,0,0)"]
     });
     return (
       <Modal
@@ -78,7 +84,8 @@ export default class SlidingMenu extends React.Component<Props> {
         onRequestClose={() => {}}
       >
         <Animated.View
-          style={{
+            {...this.menuController.panHandlers}
+            style={{
             height: Dimensions.get("window").height,
             width: Dimensions.get("window").width,
             position: "absolute",
@@ -87,7 +94,6 @@ export default class SlidingMenu extends React.Component<Props> {
         />
 
         <Animated.View
-          {...this.menuController.panHandlers}
           onLayout={e => {
             this.setState({ contentHeight: e.nativeEvent.layout.height });
           }}
@@ -100,21 +106,20 @@ export default class SlidingMenu extends React.Component<Props> {
             }
           ]}
         >
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
-          <Text>AAAA</Text>
+          <MenuItem
+              content={{name : `Tắt thông báo về tin của ${timelineData[this.props.timelineStore.index].author.name}`}}
+              icon={<AntDesign name={'closesquareo'} size={30}/>}
+              onPress={()=>{console.log("Tắt thông báo")}}/>
+          <MenuItem
+              content={{name : 'Gửi phản hồi hoặc báo tin'}}
+              icon={<MaterialIcons name={'error-outline'} size={30}/>}
+              onPress={()=>{console.log('Report')}}
+          />
+          <MenuItem
+              content={{name: 'Đã xảy ra lỗi'}}
+              icon={<MaterialCommunityIcons name={'bug-outline'} size={30}/>}
+              onPress={()=>{console.log('Bugr')}}
+          />
         </Animated.View>
       </Modal>
     );

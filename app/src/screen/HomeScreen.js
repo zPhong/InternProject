@@ -24,7 +24,7 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 import GroupScreen from "./group/GroupScreen";
 import NotificationScreen from "./notification/NotificationScreen";
 import SettingScreen from "./setting/SettingScreen";
-import SlidingMenu from "../components/SlidingMenu";
+import SlidingMenu from "../components/slidingmenu/SlidingMenu";
 
 /* global require */
 
