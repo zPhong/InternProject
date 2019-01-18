@@ -23,6 +23,12 @@ export default class EmojiBubble extends React.Component<Props> {
 
   render() {
     const { EmojiController } = this.props;
+    const scaleRate = EmojiController.translateY.map((value, index) =>
+      value.interpolate({
+        inputRange: [-50, 0],
+        outputRange: [1, 0.01]
+      })
+    );
     return (
       <Modal
         animationType={"none"}
@@ -46,19 +52,26 @@ export default class EmojiBubble extends React.Component<Props> {
           }}
         />
         <View
+          {...EmojiController.controller.panHandlers}
           style={[
             {
               position: "absolute",
               left: EmojiController.x,
-              width: 350,
-              height: 60,
+              width: 300,
               borderRadius: 30,
               flexDirection: "row",
               backgroundColor: "white",
               justifyContent: "space-evenly",
-              alignItems: "center",
-              padding: 10
+              alignItems: "flex-end",
+              elevation: 5
             },
+            EmojiController.selectedIndex != -1
+              ? {
+                  height: EmojiController.minimumSize + 10
+                }
+              : {
+                  height: 50
+                },
             EmojiController.y < 150
               ? { top: EmojiController.y }
               : { bottom: Dimensions.get("window").height - EmojiController.y }
@@ -68,11 +81,26 @@ export default class EmojiBubble extends React.Component<Props> {
             .fill(0)
             .map((value, index) => {
               return (
-                <Image
+                <Animated.Image
                   key={index}
                   source={emojiImage[index]}
-                  resizeMode="contain"
-                  style={{ height: 40, aspectRatio: 1 }}
+                  style={[
+                    {
+                      width: EmojiController.iconsSize[index],
+                      aspectRatio: 1,
+                      marginTop: 100
+                    },
+                    {
+                      transform: [
+                        {
+                          translateY: EmojiController.translateY[index]
+                        },
+                        {
+                          scale: scaleRate[index]
+                        }
+                      ]
+                    }
+                  ]}
                 />
               );
             })}

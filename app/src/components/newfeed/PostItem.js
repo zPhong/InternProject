@@ -125,7 +125,6 @@ export default class PostItem extends React.Component {
                     evt.nativeEvent.pageY
                   );
                   EmojiController.showBubble();
-                  console.log(evt.nativeEvent.pageX, evt.nativeEvent.pageY);
                 }}
               >
                 <View
