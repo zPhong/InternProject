@@ -9,7 +9,9 @@ export default class EmojiController<Props> {
   @observable x: number = 0;
   @observable y: number = 0;
 
-  @observable iconsSize: Array = Array(6).fill(NORMAL_SIZE);
+  @observable iconsSize: Array = Array(6).fill(null).map((x,i)=>{
+    new Animated.Value(NORMAL_SIZE);
+  });
   @observable minimumSize: number = NORMAL_SIZE - 12;
   @observable maximumSize: number = NORMAL_SIZE + 48;
   @observable selectedIndex: number = -1;
@@ -17,7 +19,9 @@ export default class EmojiController<Props> {
   @observable emojiBubbleVisible: boolean = false;
   @observable translateY: Array = Array(6)
     .fill(null)
-    .map((x, i) => new Animated.Value(0));
+    .map((x, i) => new Animated.Value(50));
+
+
 
   @observable controller: any = PanResponder.create({
     // Ask to be the responder:
@@ -30,6 +34,8 @@ export default class EmojiController<Props> {
 
       if (y > 0 && y < NORMAL_SIZE + 10) {
         this.selectedIndex = x / 50 > 6 ? -1 : parseInt(x / 50);
+
+
         this.iconsSize.fill(this.minimumSize);
         this.iconsSize[this.selectedIndex] = this.maximumSize;
       } else {
@@ -37,11 +43,15 @@ export default class EmojiController<Props> {
       }
 
       if (this.selectedIndex == -1) {
-        this.iconsSize.fill(NORMAL_SIZE);
-      }
-      console.log(this.selectedIndex);
+        this.iconsSize.fill(NORMAL_SIZE);      }
     },
-    onPanResponderRelease: (evt, gestureState) => {}
+    onPanResponderRelease: (evt, gestureState) => {
+        this.iconsSize.fill(NORMAL_SIZE);
+        if(this.selectedIndex != -1) {
+            this.selectedIndex = -1;
+            this.hideBubble();
+        }
+    }
   });
 
   @action.bound setStartLocation(x: number, y: number) {
@@ -58,7 +68,7 @@ export default class EmojiController<Props> {
       50,
       this.translateY.map((value, index) =>
         Animated.timing(value, {
-          toValue: -50,
+          toValue: 0,
           duration: 200
         })
       )
@@ -73,7 +83,7 @@ export default class EmojiController<Props> {
       50,
       [...this.translateY].reverse().map((value, index) =>
         Animated.timing(value, {
-          toValue: 0,
+          toValue: 50,
           duration: 200
         })
       )

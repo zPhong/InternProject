@@ -25,7 +25,7 @@ export default class EmojiBubble extends React.Component<Props> {
     const { EmojiController } = this.props;
     const scaleRate = EmojiController.translateY.map((value, index) =>
       value.interpolate({
-        inputRange: [-50, 0],
+        inputRange: [0, 60],
         outputRange: [1, 0.01]
       })
     );
@@ -63,7 +63,8 @@ export default class EmojiBubble extends React.Component<Props> {
               backgroundColor: "white",
               justifyContent: "space-evenly",
               alignItems: "flex-end",
-              elevation: 5
+              elevation: 5,
+              paddingVertical: 5,
             },
             EmojiController.selectedIndex != -1
               ? {
@@ -88,7 +89,6 @@ export default class EmojiBubble extends React.Component<Props> {
                     {
                       width: EmojiController.iconsSize[index],
                       aspectRatio: 1,
-                      marginTop: 100
                     },
                     {
                       transform: [

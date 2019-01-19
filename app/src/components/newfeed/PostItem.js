@@ -16,7 +16,7 @@ import { observer, inject } from "mobx-react";
 
 type Props = {};
 
-@inject("EmojiController")
+@inject("EmojiController","slidingmenuStore")
 @observer
 export default class PostItem extends React.Component {
   constructor(props: any) {
@@ -58,7 +58,9 @@ export default class PostItem extends React.Component {
                 14 giờ trước
               </Text>
             </View>
-            <TouchableOpacity onPress={() => {}} style={{ marginLeft: "auto" }}>
+            <TouchableOpacity onPress={() => {}} style={{ marginLeft: "auto" }} onPress={()=>{
+              this.props.slidingmenuStore.showMenu();
+            }}>
               <MaterialIcons name={"more-horiz"} color={"black"} size={30} />
             </TouchableOpacity>
           </View>

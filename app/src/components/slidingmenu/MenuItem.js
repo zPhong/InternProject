@@ -34,7 +34,9 @@ export default class MenuItem extends React.Component<Props> {
                 }
                 <View style={{flex: 1, marginLeft: 5 , justifyContent :'center'}}>
                     <Text style={{fontSize : 17, color :'black'}}>{this.props.content.name}</Text>
+                    {this.props.content.descr !== undefined && this.props.content.descr !== ""?
                     <Text>{this.props.content.descr}</Text>
+                        :null}
                 </View>
                 </View>
             </TouchableHighlight>);
