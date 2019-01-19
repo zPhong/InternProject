@@ -14,13 +14,16 @@ import {
   Modal,
   PanResponder,
   TouchableHighlight,
-  ImageBackground
+  ImageBackground,
+  FlatList
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 /* global require */
 import { observer, inject, toJS } from "mobx-react";
 import TimeLineModal from "../../components/newfeed/TimeLineModal";
 import { timelineData } from "../../data";
+import PostItem from "../../components/newfeed/PostItem";
+import EmojiBubble from "../../components/emoji/EmojiBubble";
 type Props = {};
 type State = {
   user: {
@@ -86,11 +89,9 @@ export default class NewFeedScreen extends Component<Props> {
     );
   }
 
-  render() {
-    const { navigate } = this.props.navigation;
-    const { timelineStore } = this.props;
+  renderHeader = () => {
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: "#CDCDCD" }}>
+      <View>
         <View style={{ backgroundColor: "white" }}>
           <TouchableHighlight
             style={NewFeedStyle.newPostContainer}
@@ -115,7 +116,11 @@ export default class NewFeedScreen extends Component<Props> {
                   style={{ width: 43, aspectRatio: 1 }}
                 />
                 <Text
-                  style={{ fontSize: 13, color: "#757575", fontWeight: "bold" }}
+                  style={{
+                    fontSize: 13,
+                    color: "#757575",
+                    fontWeight: "bold"
+                  }}
                 >
                   Ảnh
                 </Text>
@@ -137,9 +142,26 @@ export default class NewFeedScreen extends Component<Props> {
             })}
           </View>
         </ScrollView>
+      </View>
+    );
+  };
+
+  render() {
+    const { navigate } = this.props.navigation;
+    const { timelineStore } = this.props;
+    return (
+      <View style={{ flex: 1 }}>
+        <FlatList
+          style={{ flex: 1, backgroundColor: "#CDCDCD" }}
+          ListHeaderComponent={this.renderHeader}
+          keyExtractor={(item, index) => index.toString()}
+          data={timelineData}
+          renderItem={({ item }) => <PostItem />}
+        />
 
         <TimeLineModal />
-      </ScrollView>
+        <EmojiBubble />
+      </View>
     );
   }
 }

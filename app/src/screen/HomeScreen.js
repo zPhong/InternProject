@@ -180,9 +180,7 @@ export default class HomeScreen extends Component<Props> {
       onPanResponderMove: this.AnimatedHeader,
       onPanResponderRelease: () => true,
       onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderTerminate: (evt, gestureState) => {
-        console.log("AAAA");
-      }
+      onPanResponderTerminate: (evt, gestureState) => {}
     });
   }
 
