@@ -5,7 +5,6 @@ import {
 } from "react-navigation";
 
 import NewFeedScreen from "./newfeed/NewFeedScreen";
-import ProfileScreen from "./watch/WatchScreen";
 import {
   TextInput,
   View,
@@ -25,6 +24,7 @@ import GroupScreen from "./group/GroupScreen";
 import NotificationScreen from "./notification/NotificationScreen";
 import SettingScreen from "./setting/SettingScreen";
 import SlidingMenu from "../components/slidingmenu/SlidingMenu";
+import WatchScreen from "./watch/WatchScreen";
 
 /* global require */
 
@@ -112,7 +112,7 @@ const TopNavigation = createAppContainer(
         }
       },
       Watch: {
-        screen: ProfileScreen,
+        screen: WatchScreen,
         navigationOptions: {
           tabBarLabel: "Watch",
           tabBarIcon: ({ focused }) => {
@@ -196,7 +196,11 @@ export default class HomeScreen extends Component<Props> {
     this.animatedValue.setValue(Math.abs(calculatedPos / headerHeight));
   };
 
-  render() {
+    static router = TopNavigation.router;
+
+
+
+    render() {
     const { header } = globalStyle;
     const headerPos = this.animatedValue.interpolate({
       inputRange: [0, 1],
@@ -212,7 +216,7 @@ export default class HomeScreen extends Component<Props> {
           </TouchableOpacity>
           <FontAwesome5 name={"facebook-messenger"} style={header.icon} />
         </Animated.View>
-        <TopNavigation />
+        <TopNavigation navigation={this.props.navigation} />
         <SlidingMenu />
       </View>
     );

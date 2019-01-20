@@ -13,12 +13,14 @@ import { timelineData } from "../../data";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { observer, inject } from "mobx-react";
+import { withNavigation } from 'react-navigation';
 
 type Props = {};
 
 @inject("EmojiController","slidingmenuStore")
 @observer
-export default class PostItem extends React.Component {
+
+class PostItem extends React.Component {
   constructor(props: any) {
     super(props);
   }
@@ -44,9 +46,11 @@ export default class PostItem extends React.Component {
               style={PostStyle.postAvatar}
             />
             <View style={{ height: "100%", marginLeft: 10 }}>
+              <TouchableOpacity style={{flex: 1,}} onPress={()=>{
+                this.props.navigation.navigate('Profile');
+              }}>
               <Text
                 style={{
-                  flex: 1,
                   color: "black",
                   fontSize: 20,
                   fontWeight: "bold"
@@ -54,6 +58,7 @@ export default class PostItem extends React.Component {
               >
                 Lục Trường Phong
               </Text>
+              </TouchableOpacity>
               <Text style={{ flex: 1, fontSize: 18, paddingBottom: 15 }}>
                 14 giờ trước
               </Text>
@@ -171,6 +176,8 @@ export default class PostItem extends React.Component {
     );
   }
 }
+
+export default withNavigation(PostItem);
 
 const PostStyle = StyleSheet.create({
   container: {
