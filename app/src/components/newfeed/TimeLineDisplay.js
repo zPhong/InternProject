@@ -20,7 +20,8 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { observable, action, autorun, computed } from "mobx";
 
 type Props = {
-  timelineStore: any
+  timelineStore: any,
+  index: number
 };
 
 @inject("timelineStore", "slidingmenuStore")
@@ -33,8 +34,7 @@ export default class TimeLineDisplay extends React.Component<Props> {
   componentWillMount() {}
 
   render() {
-    const { timelineStore, slidingmenuStore } = this.props;
-    const index = timelineStore.index;
+    const { timelineStore, slidingmenuStore, index } = this.props;
     let timerWidth = timelineStore.timerValue.interpolate({
       inputRange: [0, 1],
       outputRange: ["100%", "0%"]
@@ -152,7 +152,7 @@ export default class TimeLineDisplay extends React.Component<Props> {
 
 const TimeLineStyle = StyleSheet.create({
   container: {
-    width: "100%",
+    width: Dimensions.get("window").width,
     flex: 1,
     backgroundColor: "rgb(36,38,41)",
     justifyContent: "space-between",

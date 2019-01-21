@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { observer, inject } from "mobx-react/native";
 import TimeLineDisplay from "./TimeLineDisplay";
+import { timelineData } from "../../data";
+
+const ITEM_WIDTH = Dimensions.get("window").width;
 
 type State = {
   isShouldVisibleModal: boolean
@@ -23,36 +26,77 @@ type Props = {
 export default class TimeLineModal extends React.Component<Props> {
   constructor(props: any) {
     super(props);
-
+    this.direction = "none";
     this.state = { isShouldVisibleModal: false };
     this.translateY = new Animated.Value(0);
+    this.currentIndex = 0;
     this.timelineController = PanResponder.create({
       // Ask to be the responder:
       onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => false,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onPanResponderGrant: (e, gestureState) => {
         this.translateY.setValue(0);
       },
       onPanResponderMove: (e, gestureState) => {
-        if (gestureState.y0 < Dimensions.get("window").height) {
-          if (gestureState.dy >= 0) this.translateY.setValue(gestureState.dy);
-          else {
-            this.translateY.setValue(0);
+        if (this.direction === "none") {
+          if (Math.abs(gestureState.vy) <= Math.abs(gestureState.vx)) {
+            this.direction = "horizontal";
+          } else {
+            this.direction = "vertical";
           }
+        }
+        if (this.direction === "vertical") {
+          if (gestureState.y0 < Dimensions.get("window").height) {
+            if (gestureState.dy >= 0) this.translateY.setValue(gestureState.dy);
+            else {
+              this.translateY.setValue(0);
+            }
 
-          if (gestureState.dy > Dimensions.get("window").height * 0.2)
-            this.setState({ isShouldVisibleModal: true });
-          else {
-            this.setState({ isShouldVisibleModal: false });
+            if (gestureState.dy > Dimensions.get("window").height * 0.2)
+              this.setState({ isShouldVisibleModal: true });
+            else {
+              this.setState({ isShouldVisibleModal: false });
+            }
           }
+        }
+        if (this.direction === "horizontal") {
+          this._flatList.scrollToOffset({
+            animated: true,
+            offset: this.currentIndex * ITEM_WIDTH - gestureState.dx
+          });
         }
       },
       onPanResponderRelease: (evt, gestureState) => {
         const { x0, y0 } = gestureState;
         const { width, height } = Dimensions.get("window");
-        if (y0 < height * 0.7 && y0 > height * 0.3) {
-          if (x0 > width * 0.6) this.props.timelineStore.nextDisplay();
-          if (x0 < width * 0.4) this.props.timelineStore.prevDisplay();
+        // if (y0 < height * 0.7 && y0 > height * 0.3) {
+        //   if (x0 > width * 0.6) this.props.timelineStore.nextDisplay();
+        //   if (x0 < width * 0.4) this.props.timelineStore.prevDisplay();
+
+        //   return true;
+        // }
+        this.direction = "none";
+        if (gestureState.dx > ITEM_WIDTH / 2) {
+          if (this.currentIndex > 1) {
+            this._flatList.scrollToIndex({
+              animated: true,
+              index: this.currentIndex - 1
+            });
+          }
+        } else {
+          if (gestureState.dx < -ITEM_WIDTH / 2) {
+            if (this.currentIndex < timelineData.length - 1) {
+              this._flatList.scrollToIndex({
+                animated: true,
+                index: this.currentIndex + 1
+              });
+            }
+          } else {
+            this._flatList.scrollToIndex({
+              animated: true,
+              index: this.currentIndex
+            });
+          }
         }
         if (this.state.isShouldVisibleModal) {
           Animated.timing(this.translateY, {
@@ -74,6 +118,8 @@ export default class TimeLineModal extends React.Component<Props> {
 
   translateY: Animated.Value;
   timelineController: PanResponder;
+  currentIndex: number;
+  direction: string;
 
   render() {
     const { timelineStore } = this.props;
@@ -111,7 +157,20 @@ export default class TimeLineModal extends React.Component<Props> {
           ]}
         >
           <SafeAreaView style={{ backgroundColor: "black" }} />
-          <TimeLineDisplay />
+          <FlatList
+            ref={ref => (this._flatList = ref)}
+            onViewableItemsChanged={e => {
+              console.log(e.viewableItems);
+              this.currentIndex = e.viewableItems[0].index;
+            }}
+            viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
+            scrollEventThrottle={16}
+            style={{ height: "100%" }}
+            horizontal={true}
+            keyExtractor={(item, index) => index.toString()}
+            data={timelineData}
+            renderItem={({ item, index }) => <TimeLineDisplay index={index} />}
+          />
         </Animated.View>
       </Modal>
     );
