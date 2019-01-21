@@ -153,7 +153,7 @@ export default class TimeLineDisplay extends React.Component<Props> {
 const TimeLineStyle = StyleSheet.create({
   container: {
     width: "100%",
-    height: "100%",
+    flex: 1,
     backgroundColor: "rgb(36,38,41)",
     justifyContent: "space-between",
     paddingBottom: 20

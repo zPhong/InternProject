@@ -9,7 +9,6 @@ import {
   Dimensions
 } from "react-native";
 import { observer, inject } from "mobx-react";
-import { Directions } from "react-native-gesture-handler";
 import { emojiImage } from "../../data";
 
 type Props = {};
@@ -64,7 +63,7 @@ export default class EmojiBubble extends React.Component<Props> {
               justifyContent: "space-evenly",
               alignItems: "flex-end",
               elevation: 5,
-              paddingVertical: 5,
+              paddingVertical: 5
             },
             EmojiController.selectedIndex != -1
               ? {
@@ -88,7 +87,7 @@ export default class EmojiBubble extends React.Component<Props> {
                   style={[
                     {
                       width: EmojiController.iconsSize[index],
-                      aspectRatio: 1,
+                      aspectRatio: 1
                     },
                     {
                       transform: [

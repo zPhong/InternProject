@@ -4,7 +4,8 @@ import {
   Modal,
   PanResponder,
   Dimensions,
-  FlatList
+  FlatList,
+  SafeAreaView
 } from "react-native";
 import { observer, inject } from "mobx-react/native";
 import TimeLineDisplay from "./TimeLineDisplay";
@@ -109,6 +110,7 @@ export default class TimeLineModal extends React.Component<Props> {
             }
           ]}
         >
+          <SafeAreaView style={{ backgroundColor: "black" }} />
           <TimeLineDisplay />
         </Animated.View>
       </Modal>
