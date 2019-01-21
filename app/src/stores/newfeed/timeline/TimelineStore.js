@@ -41,21 +41,20 @@ export default class TimelineStore<Props> {
   autoHideModal = reaction(
     () => this.index,
     result => {
-      console.log(this.slidingmenuStore);
       if (result <= timelineData.length - 1) {
         this.timerValue.setValue(0);
         this.timerAnimated.start(() => {
-          if (!stores.slidingmenuStore.menuVisible) this.nextDisplay();
+          //if (!stores.slidingmenuStore.menuVisible) this.nextDisplay();
         });
       }
       if (result > timelineData.length - 1) {
         this.modalVisible = false;
         this.timerValue.setValue(0);
         this.timerAnimated.start(() => {
-          this.timerValue.setValue(0);
+          //this.timerValue.setValue(0);
         });
       }
-      //if (result < 0) this.index = 0;
+      if (result < 0) this.index = 0;
     }
   );
 }
