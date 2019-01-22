@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { observer, inject } from "mobx-react";
 
-import LoginTextInput from "../../components/login/LoginTextInput";
+import LoginTextInput from "./LoginTextInput";
 
 type Props = {
   navigation: any

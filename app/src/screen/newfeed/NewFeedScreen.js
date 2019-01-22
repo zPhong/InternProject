@@ -20,9 +20,9 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 /* global require */
 import { observer, inject, toJS } from "mobx-react";
-import TimeLineModal from "../../components/newfeed/TimeLineModal";
+import TimeLineModal from "./TimeLineModal";
 import { timelineData } from "../../data";
-import PostItem from "../../components/newfeed/PostItem";
+import PostItem from "../../components/post/PostItem";
 import EmojiBubble from "../../components/emoji/EmojiBubble";
 type Props = {};
 type State = {

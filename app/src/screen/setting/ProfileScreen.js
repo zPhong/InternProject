@@ -14,12 +14,12 @@ import { profileData, timelineData } from "../../data";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Feather from "react-native-vector-icons/Feather";
-import PostItem from "../../components/newfeed/PostItem";
+import PostItem from "../../components/post/PostItem";
 import Entypo from "react-native-vector-icons/Entypo";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-import ActionButton from "../../components/profile/ActionButton";
+import ActionButton from "../../components/button/ActionButton";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;

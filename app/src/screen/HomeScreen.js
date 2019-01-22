@@ -84,81 +84,79 @@ const globalStyle = {
   })
 };
 
-const TopNavigation = createAppContainer(
-  createMaterialTopTabNavigator(
-    {
-      NewFeed: {
-        screen: NewFeedScreen,
-        navigationOptions: {
-          tabBarLabel: "NewFeed",
-          tabBarIcon: ({ focused }) => {
-            const image = focused
-              ? require("../../assets/icons/newfeed_active.jpg")
-              : require("../../assets/icons/newfeed.jpg");
-            return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
-          }
-        }
-      },
-      Group: {
-        screen: GroupScreen,
-        navigationOptions: {
-          tabBarLabel: "Group",
-          tabBarIcon: ({ focused }) => {
-            const image = focused
-              ? require("../../assets/icons/group_active.jpg")
-              : require("../../assets/icons/group.jpg");
-            return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
-          }
-        }
-      },
-      Watch: {
-        screen: WatchScreen,
-        navigationOptions: {
-          tabBarLabel: "Watch",
-          tabBarIcon: ({ focused }) => {
-            const image = focused
-              ? require("../../assets/icons/watch_active.jpg")
-              : require("../../assets/icons/watch.jpg");
-            return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
-          }
-        }
-      },
-      Notification: {
-        screen: NotificationScreen,
-        navigationOptions: {
-          tabBarLabel: "Notification",
-          tabBarIcon: ({ focused }) => {
-            const image = focused
-              ? require("../../assets/icons/noti_active.jpg")
-              : require("../../assets/icons/noti.jpg");
-            return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
-          }
-        }
-      },
-      Setting: {
-        screen: SettingScreen,
-        navigationOptions: {
-          tabBarLabel: "Setting",
-          tabBarIcon: ({ focused }) => {
-            const image = focused
-              ? require("../../assets/icons/setting_active.jpg")
-              : require("../../assets/icons/setting.jpg");
-            return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
-          }
+const TopNavigation = createMaterialTopTabNavigator(
+  {
+    NewFeed: {
+      screen: NewFeedScreen,
+      navigationOptions: {
+        tabBarLabel: "NewFeed",
+        tabBarIcon: ({ focused }) => {
+          const image = focused
+            ? require("../../assets/icons/newfeed_active.jpg")
+            : require("../../assets/icons/newfeed.jpg");
+          return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
         }
       }
     },
-    {
-      tabBarOptions: {
-        tabStyle: StyleSheet.flatten(globalStyle.tabNav.tabContainer),
-        style: StyleSheet.flatten(globalStyle.tabNav.container),
-        indicatorStyle: { backgroundColor: "transparent" },
-        iconStyle: { alignSelf: "center" },
-        showIcon: true,
-        showLabel: false
+    Group: {
+      screen: GroupScreen,
+      navigationOptions: {
+        tabBarLabel: "Group",
+        tabBarIcon: ({ focused }) => {
+          const image = focused
+            ? require("../../assets/icons/group_active.jpg")
+            : require("../../assets/icons/group.jpg");
+          return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
+        }
+      }
+    },
+    Watch: {
+      screen: WatchScreen,
+      navigationOptions: {
+        tabBarLabel: "Watch",
+        tabBarIcon: ({ focused }) => {
+          const image = focused
+            ? require("../../assets/icons/watch_active.jpg")
+            : require("../../assets/icons/watch.jpg");
+          return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
+        }
+      }
+    },
+    Notification: {
+      screen: NotificationScreen,
+      navigationOptions: {
+        tabBarLabel: "Notification",
+        tabBarIcon: ({ focused }) => {
+          const image = focused
+            ? require("../../assets/icons/noti_active.jpg")
+            : require("../../assets/icons/noti.jpg");
+          return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
+        }
+      }
+    },
+    Setting: {
+      screen: SettingScreen,
+      navigationOptions: {
+        tabBarLabel: "Setting",
+        tabBarIcon: ({ focused }) => {
+          const image = focused
+            ? require("../../assets/icons/setting_active.jpg")
+            : require("../../assets/icons/setting.jpg");
+          return <Image source={image} style={globalStyle.tabNav.tabIcon} />;
+        }
       }
     }
-  )
+  },
+  {
+    tabBarOptions: {
+      tabStyle: StyleSheet.flatten(globalStyle.tabNav.tabContainer),
+      style: StyleSheet.flatten(globalStyle.tabNav.container),
+      indicatorStyle: { backgroundColor: "transparent" },
+      iconStyle: { alignSelf: "center" },
+      showIcon: true,
+      showLabel: false
+    }
+  }
 );
 
 type Props = {};
@@ -196,11 +194,9 @@ export default class HomeScreen extends Component<Props> {
     this.animatedValue.setValue(Math.abs(calculatedPos / headerHeight));
   };
 
-    static router = TopNavigation.router;
+  static router = TopNavigation.router;
 
-
-
-    render() {
+  render() {
     const { header } = globalStyle;
     const headerPos = this.animatedValue.interpolate({
       inputRange: [0, 1],
