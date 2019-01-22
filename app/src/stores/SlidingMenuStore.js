@@ -15,7 +15,10 @@ export default class SlidingUpMenuStore<Props> {
   @observable menuController: PanResponder = PanResponder.create({
     // Ask to be the responder:
     onStartShouldSetPanResponder: (evt, gestureState) => true,
-    onMoveShouldSetPanResponder: (evt, gestureState) => false,
+    onMoveShouldSetPanResponder: (evt, gestureState) => true,
+    onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+      return true;
+    },
     onPanResponderGrant: (e, gestureState) => {
       this.translateY.setValue(0);
     },

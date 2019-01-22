@@ -7,7 +7,8 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  Platform
+  Platform,
+  Easing
 } from "react-native";
 import { observer, inject } from "mobx-react/native";
 import TimeLineDisplay from "./TimeLineDisplay";
@@ -16,7 +17,7 @@ import { timelineData } from "../../data";
 const ITEM_WIDTH = Dimensions.get("window").width;
 const ITEM_HEIGHT = Dimensions.get("window").height;
 const OFFSET = Platform.OS === "ios" ? 2 : 1.5;
-const AFTEROFFSET = Platform.OS === "ios" ? 2.38 : 1.7;
+const AFTEROFFSET = Platform.OS === "ios" ? 2.38 : 1.5;
 
 type State = {
   isShouldVisibleModal: boolean
@@ -115,57 +116,53 @@ export default class TimeLineModal extends React.Component<Props> {
         if (gestureState.dx > ITEM_WIDTH / 2) {
           if (this.currentIndex > 0) {
             this.currentIndex--;
-
-            setTimeout(() => {
-              if (this.props.timelineStore.modalVisible)
-                this._flatList.scrollToIndex({
-                  animated: true,
-                  index: this.currentIndex
-                });
-            }, 150);
             Animated.timing(this._animatedValue, {
               toValue: {
                 x: ITEM_WIDTH,
                 y: 0
               },
               duration: 120
-            }).start();
+            }).start(() => {
+              if (this.props.timelineStore.modalVisible)
+                this._flatList.scrollToIndex({
+                  animated: true,
+                  index: this.currentIndex
+                });
+            });
           }
         } else {
           if (gestureState.dx < -ITEM_WIDTH / 2) {
             if (this.currentIndex < timelineData.length - 1) {
               this.currentIndex++;
-
-              setTimeout(() => {
-                if (this.props.timelineStore.modalVisible)
-                  this._flatList.scrollToIndex({
-                    animated: true,
-                    index: this.currentIndex
-                  });
-              }, 150);
               Animated.timing(this._animatedValue, {
                 toValue: {
                   x: -ITEM_WIDTH,
                   y: 0
                 },
                 duration: 120
-              }).start();
+              }).start(() => {
+                if (this.props.timelineStore.modalVisible)
+                  this._flatList.scrollToIndex({
+                    animated: true,
+                    index: this.currentIndex
+                  });
+              });
             }
           } else {
-            setTimeout(() => {
-              if (this.props.timelineStore.modalVisible)
-                this._flatList.scrollToIndex({
-                  animated: true,
-                  index: this.currentIndex
-                });
-            }, 150);
             Animated.timing(this._animatedValue, {
               toValue: {
                 x: 0,
                 y: 0
               },
+              easing: Easing.inOut(Easing.linear),
               duration: 120
-            }).start();
+            }).start(() => {
+              if (this.props.timelineStore.modalVisible)
+                this._flatList.scrollToIndex({
+                  animated: true,
+                  index: this.currentIndex
+                });
+            });
           }
         }
         if (this.state.isShouldVisibleModal) {
@@ -200,7 +197,7 @@ export default class TimeLineModal extends React.Component<Props> {
 
     let rotateY = scrollX.interpolate({
       inputRange: [pageX - ITEM_WIDTH, pageX, pageX + ITEM_WIDTH],
-      outputRange: ["-15deg", "0deg", "15deg"],
+      outputRange: ["-3deg", "0deg", "3deg"],
       extrapolate: "clamp"
     });
 
@@ -211,14 +208,8 @@ export default class TimeLineModal extends React.Component<Props> {
     });
 
     let opacity = scrollX.interpolate({
-      inputRange: [
-        pageX - ITEM_WIDTH,
-        pageX - ITEM_WIDTH + 10,
-        pageX,
-        pageX + ITEM_WIDTH - 250,
-        pageX + ITEM_WIDTH
-      ],
-      outputRange: [0, 0.6, 1, 0.6, 0],
+      inputRange: [pageX - ITEM_WIDTH, pageX, pageX + ITEM_WIDTH],
+      outputRange: [0, 1, 0],
       extrapolate: "clamp"
     });
 

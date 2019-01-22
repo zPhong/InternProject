@@ -50,6 +50,7 @@ export default class SlidingMenu extends React.Component<Props> {
           }}
         />
         <Animated.View
+          {...slidingmenuStore.menuController.panHandlers}
           onLayout={e => {
             slidingmenuStore.contentHeight = e.nativeEvent.layout.height;
           }}
