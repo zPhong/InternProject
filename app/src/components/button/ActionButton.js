@@ -4,6 +4,7 @@ import { View, TouchableWithoutFeedback,Animated } from "react-native";
 type Props = {
   icon: any,
   title: string,
+  direction : string,
   onPress: function,
 };
 

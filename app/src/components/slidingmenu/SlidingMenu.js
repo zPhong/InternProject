@@ -14,8 +14,8 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 type Props = {
-  slidingmenuStore: any,
-  timelineStore: any
+  slidingmenuStore?: any,
+  timelineStore?: any
 };
 
 @inject("timelineStore", "slidingmenuStore")

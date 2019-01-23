@@ -159,7 +159,9 @@ const TopNavigation = createMaterialTopTabNavigator(
   }
 );
 
-type Props = {};
+type Props = {
+  navigation: any
+};
 
 export default class HomeScreen extends Component<Props> {
   constructor(props: any) {

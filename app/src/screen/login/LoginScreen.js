@@ -14,25 +14,34 @@ import { observer, inject } from "mobx-react";
 import LoginTextInput from "./LoginTextInput";
 
 type Props = {
-  navigation: any
+  navigation: any,
+  loginStore: any
+};
+
+type State = {
+  username: string,
+  password: string,
+  isEnableLogin: boolean,
+  isOrientation: boolean
 };
 
 @inject("loginStore")
 @observer
-export default class LoginScreen extends Component<Props, State> {
-  constructor(props) {
+export default class LoginScreen extends Component<Props> {
+  constructor(props: any) {
     super(props);
+
+    this.state = {
+      username: "",
+      password: "",
+      isEnableLogin: false,
+      isOrientation: false
+    };
 
     this.onLayout = this.onLayout.bind(this);
   }
-  state = {
-    username: "",
-    password: "",
-    isEnableLogin: false,
-    isOrientation: false
-  };
 
-  onLayout(e) {
+  onLayout(e: LayoutChangeEvent) {
     if (Dimensions.get("window").width > Dimensions.get("window").height)
       this.setState({ isOrientation: true });
     else this.setState({ isOrientation: false });

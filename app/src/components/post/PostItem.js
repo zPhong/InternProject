@@ -13,17 +13,24 @@ import { timelineData } from "../../data";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { observer, inject } from "mobx-react";
-import { withNavigation } from 'react-navigation';
-
+import { withNavigation } from "react-navigation";
+import { Button } from "CustomButton";
 type Props = {};
 
-@inject("EmojiController","slidingmenuStore")
+@inject("EmojiController", "slidingmenuStore")
 @observer
-
 class PostItem extends React.Component {
   constructor(props: any) {
     super(props);
   }
+
+  onLongPress = (evt: GestureResponderEvent) => {
+    this.props.EmojiController.setStartLocation(
+      evt.nativeEvent.pageX,
+      evt.nativeEvent.pageY
+    );
+    this.props.EmojiController.showBubble();
+  };
 
   render() {
     const { EmojiController } = this.props;
@@ -46,26 +53,33 @@ class PostItem extends React.Component {
               style={PostStyle.postAvatar}
             />
             <View style={{ height: "100%", marginLeft: 10 }}>
-              <TouchableOpacity style={{flex: 1,}} onPress={()=>{
-                this.props.navigation.navigate('Profile');
-              }}>
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: 20,
-                  fontWeight: "bold"
+              <TouchableOpacity
+                style={{ flex: 1 }}
+                onPress={() => {
+                  this.props.navigation.navigate("Profile");
                 }}
               >
-                Lục Trường Phong
-              </Text>
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: 20,
+                    fontWeight: "bold"
+                  }}
+                >
+                  Lục Trường Phong
+                </Text>
               </TouchableOpacity>
               <Text style={{ flex: 1, fontSize: 18, paddingBottom: 15 }}>
                 14 giờ trước
               </Text>
             </View>
-            <TouchableOpacity onPress={() => {}} style={{ marginLeft: "auto" }} onPress={()=>{
-              this.props.slidingmenuStore.showMenu();
-            }}>
+            <TouchableOpacity
+              onPress={() => {}}
+              style={{ marginLeft: "auto" }}
+              onPress={() => {
+                this.props.slidingmenuStore.showMenu();
+              }}
+            >
               <MaterialIcons name={"more-horiz"} color={"black"} size={30} />
             </TouchableOpacity>
           </View>
@@ -120,35 +134,20 @@ class PostItem extends React.Component {
               </View>
             </View>
             <View style={[PostStyle.footerRow, { padding: 0 }]}>
-              <TouchableHighlight
+              <Button
+                type={"highlight"}
                 underlayColor={"rgba(0,0,0 ,0.2)"}
-                style={{ flex: 1 }}
+                direction={"row"}
+                style={PostStyle.footerButton}
+                icon={<EvilIcons name="like" size={35} />}
+                title={"Thích"}
+                textStyle={PostStyle.footerButtonText}
                 onPress={() => {
                   console.log("like");
                 }}
-                onLongPress={evt => {
-                  EmojiController.setStartLocation(
-                    evt.nativeEvent.pageX,
-                    evt.nativeEvent.pageY
-                  );
-                  EmojiController.showBubble();
-                }}
-              >
-                <View
-                  style={PostStyle.footerButton}
-                  ref="LikeButton"
-                  onLayout={({ nativeEvent }) => {
-                    this.refs.LikeButton.measure(
-                      (x, y, width, height, pageX, pageY) => {
-                        console.log(x, y, width, height, pageX, pageY);
-                      }
-                    );
-                  }}
-                >
-                  <EvilIcons name="like" size={35} />
-                  <Text style={PostStyle.footerButtonText}>Thích</Text>
-                </View>
-              </TouchableHighlight>
+                onLongPress={this.onLongPress}
+              />
+
               <TouchableHighlight
                 underlayColor={"rgba(0,0,0 ,0.2)"}
                 style={{ flex: 1 }}
